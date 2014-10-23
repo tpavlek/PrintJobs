@@ -9,9 +9,9 @@ class Printer {
     const REMOTE_TABLE_NAME = ".tableDiv";
     const MAX_STALL_TIME = 180;
 
-    protected $client;
-    protected $url;
-    protected $name;
+    public $client;
+    public $url;
+    public $name;
 
     public function __construct($url, $printer_name, \Goutte\Client $client) {
         $guzzle = $client->getClient();

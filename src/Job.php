@@ -7,11 +7,11 @@ use Symfony\Component\DomCrawler\Crawler;
 class Job {
 
     public $id;
-    protected $name;
-    protected $owner;
-    protected $status;
-    protected $type;
-    protected $copy_count;
+    public $name;
+    public $owner;
+    public $status;
+    public $type;
+    public $copy_count;
 
     public function __construct($id, $name, $owner, $status, $type, $copy_count) {
         $this->id = $id;
