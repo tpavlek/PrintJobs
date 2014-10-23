@@ -2,18 +2,23 @@
 
 namespace Tpavlek\PrintJobs;
 
+use Carbon\Carbon;
+
 class Printer {
 
     const REMOTE_TABLE_NAME = ".tableDiv";
+    const MAX_STALL_TIME = 180;
 
     protected $client;
     protected $url;
+    protected $name;
 
-    public function __construct($url, \Goutte\Client $client) {
+    public function __construct($url, $printer_name, \Goutte\Client $client) {
         $guzzle = $client->getClient();
         $guzzle->setDefaultOption('verify', false);
         $client->setClient($guzzle);
 
+        $this->name = $printer_name;
         $this->client = $client;
         $this->url = $url;
     }
@@ -24,4 +29,7 @@ class Printer {
         return Job::parseFromDom($first_job);
     }
 
+    public function getFilesystem() {
+        return new PrinterFile($this->name);
+    }
 } 
