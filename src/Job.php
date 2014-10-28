@@ -22,11 +22,24 @@ class Job {
         $this->copy_count = $copy_count;
     }
 
+    /**
+     * Generates a unique hash which represents the current state of the object.
+     * @return string
+     */
     public function hash() {
         $seed = $this->id . $this->name . $this->owner . $this->status . $this->type . $this->copy_count;
         return hash("sha256", $seed);
     }
 
+    /**
+     * Construction function which parses a job given a DomCrawler instance.
+     *
+     * The function will search the DOM to find the table of jobs, and construct an instance from the first one, if
+     * it exists. If it does not, we will simply return null.
+     *
+     * @param Crawler $crawler
+     * @return null|Job
+     */
     public static function parseFromDom(Crawler $crawler) {
         $children = $crawler->children();
 
