@@ -1,6 +1,6 @@
 <?php
+require "bootstrap/start.php";
 
-require 'vendor/autoload.php';
 
 $jobs_path = "jobs/active.php?tab=jobs";
 
@@ -36,17 +36,16 @@ foreach ($printer_urls as $printer_url) {
                 $file_time = new \Carbon\Carbon($job_data['date']);
                 $current_time = \Carbon\Carbon::now();
                 if ($current_time->diffInSeconds($file_time) > \Tpavlek\PrintJobs\Printer::MAX_STALL_TIME) {
-                    $mailer = new \Nette\Mail\SmtpMailer([
-                        'host' => 'smtp.srv.ualberta.ca',
-                        'username' => 'glados@ualberta.ca'
-                    ]);
-                    $email = new \Tpavlek\PrintJobs\Email($job, $printer, $mailer, new \Nette\Mail\Message());
+
+                    $email = new \Tpavlek\PrintJobs\Email($job, $printer, $container->get('mailer'), $container->get('message'));
                     $email->send();
                     $printer->getFilesystem()->save($job, true);
+                    echo "Job {$job->id} is running on printer {$printer->name}\n";
                 }
             } else {
                 // We don't have the same hash, or the file is empty, so lets drop the current job there.
                 $printer->getFilesystem()->save($job, false);
+                echo "Job {$job->id} is running on printer {$printer->name}\n";
             }
         }
     } catch (GuzzleHttp\Exception\AdapterException $exception) {

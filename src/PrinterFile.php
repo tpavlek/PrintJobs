@@ -25,7 +25,7 @@ class PrinterFile {
     }
 
     public function load() {
-        $job = json_decode(file_get_contents($this->filename));
+        $job = (array)json_decode(file_get_contents($this->filename));
         return $job;
     }
 

@@ -33,9 +33,9 @@ class Email {
             . " {$this->printer->url}";
 
         $this->message
-            ->setFrom([ 'GLaDOS Printer Agent <glados@ualberta.ca>' ])
+            ->setFrom("glados@ualberta.ca", "GLaDOS")
             ->setSubject($subject)
-            ->addTo([ self::EMAIL_TO ])
+            ->addTo(self::EMAIL_TO)
             ->setBody($body);
 
         $this->mailer->send($this->message);

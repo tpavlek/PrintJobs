@@ -2,7 +2,8 @@
     "require": {
         "fabpot/goutte": "~2.0",
         "nesbot/carbon": "~1.13",
-        "nette/mail": "~2.2"
+        "nette/mail": "~2.2",
+        "orno/di": "~2.1"
     },
     "autoload": {
         "psr-4": {
