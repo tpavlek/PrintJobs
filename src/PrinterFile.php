@@ -7,9 +7,10 @@ use Carbon\Carbon;
 class PrinterFile {
 
     protected $filename;
+    protected $path;
 
-    public function __construct($printer_name) {
-        $this->filename = "printer-{$printer_name}.json";
+    public function __construct($printer_name, $path = "") {
+        $this->filename = "{$path}printer-{$printer_name}.json";
         $this->createFileIfNotExists();
     }
 

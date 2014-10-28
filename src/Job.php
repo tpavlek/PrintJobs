@@ -23,7 +23,8 @@ class Job {
     }
 
     public function hash() {
-        return hash("sha256", $this->name . $this->owner . $this->status . $this->type . $this->copy_count);
+        $seed = $this->id . $this->name . $this->owner . $this->status . $this->type . $this->copy_count;
+        return hash("sha256", $seed);
     }
 
     public static function parseFromDom(Crawler $crawler) {
