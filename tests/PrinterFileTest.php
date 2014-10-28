@@ -24,6 +24,30 @@ class PrinterFileTest extends PHPUnit_Framework_TestCase {
         $this->assertFileExists("tests/files/printer-1.json");
     }
 
+    public function testClear() {
+        file_put_contents($this->path . $this->filename, "Sample Text");
+        $file = new \Tpavlek\PrintJobs\PrinterFile($this->printer_name, $this->path);
+
+        $file->clear();
+
+        $this->assertEquals("{}", file_get_contents($this->path . $this->filename));
+    }
+
+    public function testLoad() {
+        $data = [
+            'hash' => "mock_hash",
+            "date" => (string)Carbon\Carbon::now(),
+            'email_sent' => false
+        ];
+
+        file_put_contents($this->path . $this->filename, json_encode($data));
+
+        $file = new \Tpavlek\PrintJobs\PrinterFile($this->printer_name, $this->path);
+        $job_data = $file->load();
+
+        $this->assertEquals($data, $job_data);
+    }
+
 
 
 }
