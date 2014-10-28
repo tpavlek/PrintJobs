@@ -35,7 +35,11 @@ foreach ($printer_urls as $printer_url) {
             $file_time = new \Carbon\Carbon($job_data['date']);
             $current_time = \Carbon\Carbon::now();
             if ($current_time->diffInSeconds($file_time) > \Tpavlek\PrintJobs\Printer::MAX_STALL_TIME) {
-                $email = new \Tpavlek\PrintJobs\Email($job, $printer, Swift_SmtpTransport::newInstance(), Swift_Message::newInstance());
+                $mailer = new \Nette\Mail\SmtpMailer([
+                    'host' => 'smtp.srv.ualberta.ca',
+                    'username' => 'glados@ualberta.ca'
+                ]);
+                $email = new \Tpavlek\PrintJobs\Email($job, $printer, $mailer, new \Nette\Mail\Message());
                 $email->send();
                 $printer->getFilesystem()->save($job, true);
             }
