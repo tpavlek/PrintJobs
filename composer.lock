@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7da8818792f95862095a7fb68a2c2dca",
+    "hash": "e7e5adb2c34d80db9a9017f6bc993ede",
     "packages": [
         {
             "name": "fabpot/goutte",
@@ -401,20 +401,23 @@
         },
         {
             "name": "orno/di",
-            "version": "v2.1.1",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orno/di.git",
-                "reference": "18bd3e3daf77dac14987299c8dec8d2e709abd48"
+                "reference": "77e432ef527a83dc5d8cebd7293305f50e1a1f19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orno/di/zipball/18bd3e3daf77dac14987299c8dec8d2e709abd48",
-                "reference": "18bd3e3daf77dac14987299c8dec8d2e709abd48",
+                "url": "https://api.github.com/repos/orno/di/zipball/77e432ef527a83dc5d8cebd7293305f50e1a1f19",
+                "reference": "77e432ef527a83dc5d8cebd7293305f50e1a1f19",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
             },
             "suggest": {
                 "orno/cache": "Enables caching of reflection based resolution",
@@ -422,9 +425,9 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Orno\\Di": "src/",
-                    "OrnoTest": "tests/"
+                "psr-4": {
+                    "Orno\\Di\\": "src/",
+                    "OrnoTest\\Assets\\": "tests/assets"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -445,7 +448,7 @@
                 "injection",
                 "orno"
             ],
-            "time": "2014-10-27 11:27:10"
+            "time": "2014-10-29 10:50:38"
         },
         {
             "name": "psr/log",
