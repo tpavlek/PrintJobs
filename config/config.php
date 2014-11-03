@@ -1,6 +1,7 @@
 <?php
 
 $printjobs_config = [
+    // Web addresses of all the printers we want to check on
     'printer_urls' => [
         "https://129.128.183.8/",
         "https://129.128.183.21/",
@@ -8,9 +9,14 @@ $printjobs_config = [
         "https://129.128.183.51/"
     ],
 
+    // The querystring that is concatenated to the end of the printer URL to view the current jobs.
     'jobs_path' => "jobs/active.php?tab=jobs",
 
+    // An array of email addresses that should recieve notification if a printer is down.
     'send_to' => [
         "tpavlek@ualberta.ca",
-    ]
+    ],
+
+    // Time, in seconds, that a print job can remain at the top of the queue before an email is sent
+    'max_stall_time' => 180,
 ];

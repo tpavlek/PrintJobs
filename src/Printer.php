@@ -7,7 +7,6 @@ use Carbon\Carbon;
 class Printer {
 
     const REMOTE_TABLE_NAME = ".tableDiv";
-    const MAX_STALL_TIME = 180;
 
     public $client;
     public $url;

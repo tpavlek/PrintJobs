@@ -9,11 +9,6 @@ require "bootstrap/start.php";
  */
 $io = $container->get('io');
 
-/**
- * @var \Goutte\Client $client
- */
-$client = $container->get('client');
-
 foreach ($printjobs_config['printer_urls'] as $printer_url) {
     $printer_name = \Tpavlek\PrintJobs\Printer::getNameFromUrl($printer_url);
     $printer = new \Tpavlek\PrintJobs\Printer($printer_url . $printjobs_config['jobs_path'], $printer_name, $container->get('client'));
@@ -42,7 +37,7 @@ foreach ($printjobs_config['printer_urls'] as $printer_url) {
             $file_time = new \Carbon\Carbon($job_data['date']);
             $current_time = \Carbon\Carbon::now();
 
-            if ($current_time->diffInSeconds($file_time) > \Tpavlek\PrintJobs\Printer::MAX_STALL_TIME) {
+            if ($current_time->diffInSeconds($file_time) > $printjobs_config['max_stall_time']) {
                 $email = new \Tpavlek\PrintJobs\Email($job, $printer, $container->get('mailer'), $container->get('message'));
                 $email->send($printjobs_config['send_to']);
                 // Save email_sent => true to the file so we don't send duplicate emails about this job.

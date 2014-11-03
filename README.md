@@ -32,8 +32,15 @@ and have that automatically run the script for you.
 
 To run the script use `php index.php`. This will run the script, and output the results to both a log and the console.
 
+Testing
+--------
+
+Running the tests is as simple as running `phpunit`.
+
 Notes
 ------
 
 This application uses unauthenticated SMTP to send emails, so it must be run on a machine on University of Alberta
 networks.
+
+
