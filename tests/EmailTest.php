@@ -54,7 +54,7 @@ class EmailTest extends PHPUnit_Framework_TestCase {
             ->andReturnSelf();
         $this->mock_transport->shouldReceive('send');
 
-        $email->send();
+        $email->send([ "mock_email@ualberta.ca "]);
     }
 
 }

@@ -7,8 +7,6 @@ use Nette\Mail\SmtpMailer;
 
 class Email {
 
-    const EMAIL_TO = "tpavlek@ualberta.ca";
-
     /** @var Job  */
     protected $job;
     /** @var Printer  */
@@ -26,17 +24,20 @@ class Email {
         $this->message = $message;
     }
 
-    public function send()
+    public function send(array $to)
     {
         $subject = "Job Stalled on Printer {$this->printer->name}!";
         $body = "Hello citizen, \n There is a stalled job on printer {$this->printer->name}. You can view more at"
             . " {$this->printer->url}";
 
         $this->message
-            ->setFrom("glados@ualberta.ca", "GLaDOS")
+            ->setFrom("no-reply@ualberta.ca", "UAlberta Printer Agent")
             ->setSubject($subject)
-            ->addTo(self::EMAIL_TO)
             ->setBody($body);
+
+        foreach ($to as $to_email) {
+            $this->message->addTo($to_email);
+        }
 
         $this->mailer->send($this->message);
     }

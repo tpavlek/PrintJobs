@@ -2,3 +2,4 @@ vendor/
 .idea/
 build/
 printer-*.json
+logs/*

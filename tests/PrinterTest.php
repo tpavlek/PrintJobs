@@ -14,9 +14,6 @@ class PrinterTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testConstructor() {
-        $mock_guzzle = Mockery::mock('\GuzzleHttp\Client');
-        $this->mock_goutte->shouldReceive('getClient', 'setClient')->andReturn($mock_guzzle);
-        $mock_guzzle->shouldReceive('setDefaultOption')->andReturnSelf();
         $printer = new \Tpavlek\PrintJobs\Printer("mock_url", "mock_name", $this->mock_goutte);
 
         $this->assertAttributeEquals($this->mock_goutte, "client", $printer);
@@ -29,9 +26,6 @@ class PrinterTest extends PHPUnit_Framework_TestCase {
         $domCrawler = new Symfony\Component\DomCrawler\Crawler(file_get_contents('tests/files/has_job.html'));
         $this->mock_goutte->shouldReceive('request')->andReturn($domCrawler);
 
-        $mock_guzzle = Mockery::mock('\GuzzleHttp\Client');
-        $this->mock_goutte->shouldReceive('getClient', 'setClient')->andReturn($mock_guzzle);
-        $mock_guzzle->shouldReceive('setDefaultOption')->andReturnSelf();
         $printer = new \Tpavlek\PrintJobs\Printer("mock_url", "mock_name", $this->mock_goutte);
 
         $job = $printer->getFirstRemoteJob();
@@ -42,9 +36,6 @@ class PrinterTest extends PHPUnit_Framework_TestCase {
         $domCrawler = new Symfony\Component\DomCrawler\Crawler(file_get_contents('tests/files/no_job.html'));
         $this->mock_goutte->shouldReceive('request')->andReturn($domCrawler);
 
-        $mock_guzzle = Mockery::mock('\GuzzleHttp\Client');
-        $this->mock_goutte->shouldReceive('getClient', 'setClient')->andReturn($mock_guzzle);
-        $mock_guzzle->shouldReceive('setDefaultOption')->andReturnSelf();
         $printer = new \Tpavlek\PrintJobs\Printer("mock_url", "mock_name", $this->mock_goutte);
 
         $job = $printer->getFirstRemoteJob();
@@ -52,15 +43,19 @@ class PrinterTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testGetFilesystem() {
-        $mock_guzzle = Mockery::mock('\GuzzleHttp\Client');
-        $this->mock_goutte->shouldReceive('getClient', 'setClient')->andReturn($mock_guzzle);
-        $mock_guzzle->shouldReceive('setDefaultOption')->andReturnSelf();
         $printer = new \Tpavlek\PrintJobs\Printer("mock_url", "mock_name", $this->mock_goutte);
 
         $filesystem = $printer->getFilesystem();
 
         $this->assertInstanceOf('\Tpavlek\PrintJobs\PrinterFile', $filesystem);
     }
+
+    public function testGetNameFromUrl() {
+        $url = "http://129.128.2.17";
+        $name = \Tpavlek\PrintJobs\Printer::getNameFromUrl($url);
+        $this->assertEquals(17, $name);
+    }
+
 
 
 

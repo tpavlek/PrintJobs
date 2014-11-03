@@ -14,12 +14,6 @@ class Printer {
     public $name;
 
     public function __construct($url, $printer_name, \Goutte\Client $client) {
-
-        // We must set SSL to noverify, as the SSL certs are not properly set on the server.
-        $guzzle = $client->getClient();
-        $guzzle->setDefaultOption('verify', false);
-        $client->setClient($guzzle);
-
         $this->name = $printer_name;
         $this->client = $client;
         $this->url = $url;
@@ -45,5 +39,9 @@ class Printer {
      */
     public function getFilesystem() {
         return new PrinterFile($this->name);
+    }
+
+    public static function getNameFromUrl($url) {
+        return explode('/', explode('.', $url)[3])[0];
     }
 } 
