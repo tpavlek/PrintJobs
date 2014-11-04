@@ -12,6 +12,13 @@ class Printer {
     public $url;
     public $name;
 
+    /**
+     * Construct a new Printer.
+     *
+     * @param $url
+     * @param $printer_name
+     * @param \Goutte\Client $client
+     */
     public function __construct($url, $printer_name, \Goutte\Client $client) {
         $this->name = $printer_name;
         $this->client = $client;
@@ -40,6 +47,14 @@ class Printer {
         return new PrinterFile($this->name);
     }
 
+    /**
+     * Gets the printer name from its URL.
+     *
+     * The printer name is the last digit in the IP address.
+     *
+     * @param string $url
+     * @return string
+     */
     public static function getNameFromUrl($url) {
         return explode('/', explode('.', $url)[3])[0];
     }

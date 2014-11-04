@@ -5,6 +5,13 @@ namespace Tpavlek\PrintJobs;
 use Nette\Mail\Message;
 use Nette\Mail\SmtpMailer;
 
+/**
+ * Class Email
+ *
+ * Represents an instance of an Email to send.
+ *
+ * @package Tpavlek\PrintJobs
+ */
 class Email {
 
     /** @var Job  */
@@ -16,6 +23,14 @@ class Email {
     /** @var Message  */
     protected $message;
 
+    /**
+     * Construct a new Email instance.
+     *
+     * @param Job $job
+     * @param Printer $printer
+     * @param SmtpMailer $mailer
+     * @param Message $message
+     */
     public function __construct(Job $job, Printer $printer, SmtpMailer $mailer, Message $message)
     {
         $this->job = $job;
@@ -24,6 +39,13 @@ class Email {
         $this->message = $message;
     }
 
+    /**
+     * Send the email.
+     *
+     * @param array $to A list of email addresses to send the email to.
+     * @throws \Exception
+     * @throws \Nette\Mail\SmtpException
+     */
     public function send(array $to)
     {
         $subject = "Job Stalled on Printer {$this->printer->name}!";
