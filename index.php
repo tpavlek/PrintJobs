@@ -27,7 +27,7 @@ foreach ($printjobs_config['printer_urls'] as $printer_url) {
 
         if ( isset($job_data['email_sent']) && $job_data['email_sent'] === true) {
             // We've already dealt with this one, let's move on.
-            $io->message("Job is still stuck on printer: {$printer_name} - Fix it!\n");
+            $io->message("Job {$job->id} is still stuck on printer: {$printer_name} - Fix it!\n");
             continue;
         }
 
@@ -37,9 +37,10 @@ foreach ($printjobs_config['printer_urls'] as $printer_url) {
             $file_time = new \Carbon\Carbon($job_data['date']);
             $current_time = \Carbon\Carbon::now();
 
-            if ($current_time->diffInSeconds($file_time) > $printjobs_config['max_stall_time']) {
+            if ($current_time->diffInSeconds($file_time, true) > $printjobs_config['max_stall_time']) {
                 $email = new \Tpavlek\PrintJobs\Email($job, $printer, $container->get('mailer'), $container->get('message'));
                 $email->send($printjobs_config['send_to']);
+                $io->message("Sending email about job {$job->id} on printer {$printer->name}\n");
                 // Save email_sent => true to the file so we don't send duplicate emails about this job.
                 $printer->getFilesystem()->save($job, true);
             }
