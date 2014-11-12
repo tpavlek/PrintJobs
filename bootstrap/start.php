@@ -1,4 +1,6 @@
 <?php
+use Tpavlek\PrintJobs\PrinterFactory;
+
 require 'vendor/autoload.php';
 require 'config/config.php';
 
@@ -30,7 +32,20 @@ $container->add('io', function() {
     return new \Tpavlek\PrintJobs\IO\IO($logger, new \Tpavlek\PrintJobs\IO\Echoer());
 });
 
+/*
+ * We need to register a singleton emitter because we must guarantee that we are consistently using only ONE emitter.
+ */
 $container->add('emitter', function() {
     return new League\Event\Emitter();
-});
+}, true);
+
+$container
+    ->add('taskFactory', \Tpavlek\PrintJobs\TaskRunner\TaskFactory::class)
+    ->withArgument('client')
+    ->withArgument('io')
+    ->withArgument('emitter');
+
+$container
+    ->add('printerFactory', PrinterFactory::class)
+    ->withArgument('client');
 

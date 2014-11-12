@@ -2,7 +2,13 @@
 
 namespace Tpavlek\PrintJobs\TaskRunner;
 
+use League\Event\Emitter;
+use Tpavlek\PrintJobs\IO\Events\TimedOutEvent;
+use Tpavlek\PrintJobs\IO\Events\UnknownErrorEvent;
 use Tpavlek\PrintJobs\IO\IO;
+use Tpavlek\PrintJobs\IO\UnknownError;
+use Tpavlek\PrintJobs\Printer;
+use Tpavlek\PrintJobs\PrinterFactory;
 
 class Runner
 {
@@ -10,31 +16,34 @@ class Runner
     protected $printers;
     /** @var TaskFactory */
     protected $factory;
-    protected $io;
+    protected $emitter;
 
     /**
      * Construct a new Runner instance.
-     * @param array $printers An array of stdClass representations of the printers to process.
-     * @param TaskFactory $factory A factory to instantiate new tasks
-     * @param \Tpavlek\PrintJobs\IO\IO $io
+     * @param array $printers An array of array representations of the printers to process.
+     * @param PrinterFactory $printerFactory
+     * @param TaskFactory $taskFactory
+     * @param Emitter $emitter
      */
-    public function __construct(array $printers, TaskFactory $factory, IO $io)
+    public function __construct(array $printers, PrinterFactory $printerFactory, TaskFactory $taskFactory, Emitter $emitter)
     {
         $this->printers = $printers;
-        $this->factory = $factory;
-        $this->io = $io;
+        $this->taskFactory = $taskFactory;
+        $this->printerFactory = $printerFactory;
+        $this->emitter = $emitter;
     }
 
-    public function run()
+    public function run($printjobs_config, $container)
     {
-        foreach ($this->printers as $printer) {
+        foreach ($this->printers as $printer_data) {
+            $printer = $this->printerFactory->make($printer_data);
+
             try {
-                $this->factory->make($printer, $this->io)->run(null, null);
+                $this->taskFactory->make($printer)->run($printjobs_config, $container);
             } catch (\GuzzleHttp\Exception\AdapterException $exception) {
-                $this->io->error("-- \n Timed out connecting to printer: {$printer->name}\n");
+                $this->emitter->emit(new TimedOutEvent(), $printer);
             } catch (\Exception $exception) {
-                var_dump($exception->getMessage());
-                $this->io->error("The following error occurred: '" . $exception->getMessage() . "' on printer {$printer->name}\n");
+                $this->emitter->emit(new UnknownErrorEvent(), new UnknownError($exception, $printer));
             }
         }
     }

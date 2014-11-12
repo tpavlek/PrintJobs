@@ -3,7 +3,6 @@
 namespace Tpavlek\PrintJobs\TaskRunner;
 
 use League\Event\Emitter;
-use Tpavlek\PrintJobs\IO\Events\NoJobsEvent;
 use Tpavlek\PrintJobs\IO\IO;
 use Tpavlek\PrintJobs\Printer;
 
@@ -30,7 +29,7 @@ class Task
 
         // If there are no jobs on the printer, then we can emit an event to clear jobs on that printer
         if (is_null($job)) {
-            $this->emitter->emit(new NoJobsEvent(), $this->printer);
+            $this->emitter->emit(new \Tpavlek\PrintJobs\IO\Events\NoJobsEvent(), $this->printer);
             return;
         }
 
