@@ -24,7 +24,9 @@ $container->add('client', function() {
 
 $container->add('io', function() {
     $logger = new \Monolog\Logger('log');
-    $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/printjobs.log', \Monolog\Logger::INFO));
+    $handler = new \Monolog\Handler\StreamHandler('logs/printjobs.html', \Monolog\Logger::INFO);
+    $handler->setFormatter(new \Monolog\Formatter\HtmlFormatter());
+    $logger->pushHandler($handler);
     return new \Tpavlek\PrintJobs\IO\IO($logger, new \Tpavlek\PrintJobs\IO\Echoer());
 });
 
