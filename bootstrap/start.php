@@ -25,6 +25,10 @@ $container->add('client', function() {
 $container->add('io', function() {
     $logger = new \Monolog\Logger('log');
     $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/printjobs.log', \Monolog\Logger::INFO));
-    return new \Tpavlek\PrintJobs\IO($logger);
+    return new \Tpavlek\PrintJobs\IO\IO($logger, new \Tpavlek\PrintJobs\IO\Echoer());
+});
+
+$container->add('emitter', function() {
+    return new League\Event\Emitter();
 });
 
