@@ -3,6 +3,7 @@
 namespace Tpavlek\PrintJobs;
 
 use Carbon\Carbon;
+use Tpavlek\PrintJobs\Exceptions\InvalidJobDataException;
 
 class PrinterFile {
 
@@ -24,8 +25,14 @@ class PrinterFile {
         file_put_contents($this->filename, "{}");
     }
 
+    /**
+     * Loads the job data from a file on disk.
+     *
+     * @return JobData
+     * @throws InvalidJobDataException
+     */
     public function load() {
-        $job = (array)json_decode(file_get_contents($this->filename));
+        $job = new JobData(json_decode(file_get_contents($this->filename), true));
         return $job;
     }
 

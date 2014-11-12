@@ -53,15 +53,27 @@ class IOTest extends PHPUnit_Framework_TestCase {
         $io->handle($event, $printer);
     }
 
+    public function test_it_handles_general_printer_events() {
+        $io = new \Tpavlek\PrintJobs\IO\IO($this->mock_logger, $this->mock_echo);
+
+        $event = new \Tpavlek\PrintJobs\IO\Events\TimedOutEvent();
+        $printer = new \Tpavlek\PrintJobs\Printer("mock_url", "mock_printer", new \Goutte\Client());
+
+        $expected_message = $event->getMessage($printer);
+        $this->mock_logger->shouldReceive('addError')->with($expected_message)->once();
+        $this->mock_echo->shouldReceive('write')->with("[ERROR] " . $expected_message)->once();
+
+        $io->handle($event, $printer);
+    }
+
     /**
      * @expectedException \Exception
      * @expectedExceptionMessage Expected a Tpavlek\PrintJobs\Printer but parameter is null on event: Tpavlek\PrintJobs\IO\Events\NoJobsEvent
      */
-    public function test_it_handles_events_without_parameter() {
+    public function test_it_handles_events_without_parameter_by_throwing() {
         $io = new \Tpavlek\PrintJobs\IO\IO($this->mock_logger, $this->mock_echo);
 
         $event = new \Tpavlek\PrintJobs\IO\Events\NoJobsEvent();
         $io->handle($event, null);
     }
-
 }

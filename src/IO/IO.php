@@ -6,6 +6,8 @@ use League\Event\AbstractEvent;
 use League\Event\AbstractListener;
 use Monolog\Logger;
 use Tpavlek\Printjobs\IO\Events\NoJobsEvent;
+use Tpavlek\PrintJobs\IO\Events\PrinterEvent;
+use Tpavlek\PrintJobs\IO\Events\UnknownErrorEvent;
 use Tpavlek\PrintJobs\Printer;
 
 /**
@@ -74,6 +76,21 @@ class IO extends AbstractListener
         if ($event instanceof NoJobsEvent) {
             $this->checkParam($param, $event, Printer::class);
             $this->message($event->getMessage($param));
+            return;
+        }
+
+        // This must come after NoJobsEvent, as NoJobsEvent inherits from printer event
+        // NoJobsEvent should simply log information, where all other PrinterEvents should be considered errors.
+        if ($event instanceof PrinterEvent) {
+            $this->checkParam($param, $event, Printer::class);
+            $this->error($event->getMessage($param));
+            return;
+        }
+
+        if ($event instanceof UnknownErrorEvent) {
+            $this->checkParam($param, $event, UnknownError::class);
+            $this->error($event->getMessage($param));
+            return;
         }
 
     }

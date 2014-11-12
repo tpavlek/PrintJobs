@@ -1,5 +1,7 @@
 <?php
 
+use Tpavlek\PrintJobs\JobData;
+
 class PrinterFileTest extends PHPUnit_Framework_TestCase {
 
     protected $path;
@@ -45,7 +47,11 @@ class PrinterFileTest extends PHPUnit_Framework_TestCase {
         $file = new \Tpavlek\PrintJobs\PrinterFile($this->printer_name, $this->path);
         $job_data = $file->load();
 
-        $this->assertEquals($data, $job_data);
+        $this->assertInstanceOf(JobData::class, $job_data);
+        $this->assertEquals($data['hash'], $job_data->hash);
+        $this->assertInstanceOf(Carbon\Carbon::class, $job_data->date);
+        $this->assertEquals($data['date'], (string)$job_data->date);
+        $this->assertEquals($data['email_sent'], $job_data->email_sent);
     }
 
 
