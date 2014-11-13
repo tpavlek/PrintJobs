@@ -33,8 +33,6 @@ class RunnerTest extends PHPUnit_Framework_TestCase
             [$printer],
             new \Tpavlek\PrintJobs\PrinterFactory(new Goutte\Client()),
             new \Tpavlek\PrintJobs\TaskRunner\TaskFactory(
-                new \Goutte\Client(),
-                $this->mock_io,
                 new League\Event\Emitter()
             ),
             new \League\Event\Emitter()

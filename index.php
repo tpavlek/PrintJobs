@@ -1,6 +1,7 @@
 <?php
 use League\Event\Emitter;
 use Tpavlek\PrintJobs\IO\Email;
+use Tpavlek\PrintJobs\IO\Events\NewJobEvent;
 use Tpavlek\PrintJobs\IO\Events\NoJobsEvent;
 use Tpavlek\PrintJobs\IO\Events\SendEmailEvent;
 use Tpavlek\PrintJobs\IO\Events\StillRunningEvent;
@@ -20,6 +21,8 @@ $io = $container->get('io');
 $emitter = $container->get('emitter');
 /** @var Email $email */
 $email = $container->get('email');
+$database = $container->get('database');
+$printerFileService = new \Tpavlek\PrintJobs\IO\PrinterFileService();
 
 // Register our IO listeners
 $emitter->addListener(NoJobsEvent::class, $io);
@@ -31,6 +34,17 @@ $emitter->addListener(UnknownErrorEvent::class, $io);
 
 // Register our email listener
 $emitter->addListener(SendEmailEvent::class, $email);
+
+//Register Database listener
+$emitter->addListener(NewJobEvent::class, $database);
+$emitter->addListener(SendEmailEvent::class, $database);
+$emitter->addListener(StillStuckEvent::class, $database);
+$emitter->addListener(NoJobsEvent::class, $database);
+
+//Register Filessystem Listener
+$emitter->addListener(NewJobEvent::class, $printerFileService);
+$emitter->addListener(SendEmailEvent::class, $printerFileService);
+$emitter->addListener(NoJobsEvent::class, $printerFileService);
 
 
 $runner = new \Tpavlek\PrintJobs\TaskRunner\Runner(

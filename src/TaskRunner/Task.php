@@ -17,15 +17,12 @@ class Task
 
     /** @var Printer */
     protected $printer;
-    /** @var \Tpavlek\PrintJobs\IO\IO */
-    protected $io;
     /** @var Emitter  */
     protected $emitter;
 
-    public function __construct(Printer $printer, IO $io, Emitter $emitter)
+    public function __construct(Printer $printer, Emitter $emitter)
     {
         $this->printer = $printer;
-        $this->io = $io;
         $this->emitter = $emitter;
     }
 
@@ -55,7 +52,6 @@ class Task
 
         if ($job_data->hasBeenStuckFor($printjobs_config['max_stall_time'])) {
             $this->emitter->emit(new SendEmailEvent(), new PrinterJob($this->printer, $job));
-            $this->printer->saveCurrentJob($job, true);
             return;
         }
 

@@ -25,10 +25,9 @@ class TaskTest extends PHPUnit_Framework_TestCase
         $printer = new \Tpavlek\PrintJobs\Printer("mock_url", "mock_name", new \Goutte\Client());
         $emitter = new \League\Event\Emitter();
 
-        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $this->mock_io, $emitter);
+        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $emitter);
 
         $this->assertAttributeEquals($printer, "printer", $task);
-        $this->assertAttributeEquals($this->mock_io, "io", $task);
         $this->assertAttributeEquals($emitter, "emitter", $task);
     }
 
@@ -45,7 +44,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
             ->withArgs([ \Mockery::type(\Tpavlek\PrintJobs\IO\Events\NoJobsEvent::class), $printer ])
             ->once();
 
-        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $this->mock_io, $emitter);
+        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $emitter);
         $task->run(null, null);
     }
 
@@ -73,7 +72,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
             ])
             ->once();
 
-        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $this->mock_io, $emitter);
+        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $emitter);
         $task->run(null, null);
     }
 
@@ -95,7 +94,7 @@ class TaskTest extends PHPUnit_Framework_TestCase
             ->once()
             ->withArgs([ $job, false ]);
 
-        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $this->mock_io, new \League\Event\Emitter());
+        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, new \League\Event\Emitter());
         $task->run(null, null);
     }
 

@@ -3,6 +3,7 @@
 namespace Tpavlek\PrintJobs;
 
 use Carbon\Carbon;
+use Goutte\Client;
 use League\Url\Url;
 
 class Printer {

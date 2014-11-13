@@ -2,6 +2,7 @@
 
 namespace Tpavlek\PrintJobs\TaskRunner;
 
+use Goutte\Client;
 use League\Event\Emitter;
 use Tpavlek\PrintJobs\IO\Events\TimedOutEvent;
 use Tpavlek\PrintJobs\IO\Events\UnknownErrorEvent;

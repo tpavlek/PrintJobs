@@ -1,6 +1,7 @@
 <?php
 use Tpavlek\PrintJobs\IO\Email;
 use Tpavlek\PrintJobs\PrinterFactory;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 require 'vendor/autoload.php';
 require 'config/config.php';
@@ -47,11 +48,15 @@ $container->add('emitter', function() {
 
 $container
     ->add('taskFactory', \Tpavlek\PrintJobs\TaskRunner\TaskFactory::class)
-    ->withArgument('client')
-    ->withArgument('io')
     ->withArgument('emitter');
 
 $container
     ->add('printerFactory', PrinterFactory::class)
     ->withArgument('client');
 
+/* Prepare the database */
+$capsule = new Capsule;
+$capsule->addConnection($printjobs_config['db'], 'default');
+
+$container->add('database', Tpavlek\PrintJobs\IO\Database::class)
+    ->withArgument($capsule);

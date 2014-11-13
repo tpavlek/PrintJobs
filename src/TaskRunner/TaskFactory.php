@@ -12,13 +12,11 @@ class TaskFactory {
     /** @var Client  */
     protected $client;
 
-    public function __construct(Client $client, IO $io, Emitter $emitter) {
-        $this->client = $client;
-        $this->io = $io;
+    public function __construct(Emitter $emitter) {
         $this->emitter = $emitter;
     }
 
     public function make(Printer $printer) {
-        return new Task($printer, $this->io, $this->emitter);
+        return new Task($printer, $this->emitter);
     }
 } 

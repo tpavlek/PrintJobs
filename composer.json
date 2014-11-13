@@ -6,7 +6,8 @@
         "orno/di": "~2.1",
         "monolog/monolog": "~1.11",
         "league/event": "~1.0",
-        "league/url": "~3.2"
+        "league/url": "~3.2",
+        "illuminate/database": "~4.2"
     },
     "autoload": {
         "psr-4": {

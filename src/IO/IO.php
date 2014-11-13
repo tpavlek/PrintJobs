@@ -8,6 +8,7 @@ use Monolog\Logger;
 use Tpavlek\PrintJobs\IO\Events\JobEvent;
 use Tpavlek\Printjobs\IO\Events\NoJobsEvent;
 use Tpavlek\PrintJobs\IO\Events\PrinterEvent;
+use Tpavlek\PrintJobs\IO\Events\SendEmailEvent;
 use Tpavlek\PrintJobs\IO\Events\StillRunningEvent;
 use Tpavlek\PrintJobs\IO\Events\UnknownErrorEvent;
 use Tpavlek\PrintJobs\Printer;
@@ -83,6 +84,13 @@ class IO extends AbstractListener
             return;
         }
 
+        // Inherits from JobEvent
+        if ($event instanceof StillRunningEvent) {
+            $this->checkParam($param, $event, PrinterJob::class);
+            $this->message($event->getMessage($param));
+            return;
+        }
+
         // This must come after NoJobsEvent, as NoJobsEvent inherits from printer event
         // NoJobsEvent should simply log information, where all other PrinterEvents should be considered errors.
         // Expected events are:
@@ -93,10 +101,10 @@ class IO extends AbstractListener
             return;
         }
 
-        // Inherits from JobEvent
-        if ($event instanceof StillRunningEvent) {
+        if ($event instanceof SendEmailEvent) {
             $this->checkParam($param, $event, PrinterJob::class);
-            $this->message($event->getMessage($param));
+            /** @var PrinterJob $param */
+            $this->error("Sending email about job {$param->job->id} on printer {$param->printer->name}");
         }
 
         // All other JobEvents should be considered errors
