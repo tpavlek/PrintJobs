@@ -25,12 +25,21 @@ class JobData {
     public $date;
 
     public function __construct(array $job_data) {
-        if (!isset($job_data['hash']) || !isset($job_data['email_sent']) || !isset($job_data['date'])) {
-            throw new InvalidJobDataException();
-        }
-        $this->hash = $job_data['hash'];
-        $this->email_sent = $job_data['email_sent'];
-        $this->date = new Carbon($job_data['date']);
+        $this->hash = (isset($job_data['hash'])) ? $job_data['hash'] : "";
+        $this->email_sent = (isset($job_data['email_sent'])) ? $job_data['email_sent'] : false;
+        $this->date = (isset($job_data['date'])) ? new Carbon($job_data['date']) : Carbon::now();
+    }
+
+    /**
+     * Checks if the job has been stuck for more than the given number of seconds
+     *
+     * @param $seconds
+     * @return bool
+     */
+    public function hasBeenStuckFor($seconds) {
+        $current_time = Carbon::now();
+
+        return ($current_time->diffInSeconds($this->date, true) > $seconds);
     }
 
 } 

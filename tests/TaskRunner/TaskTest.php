@@ -49,5 +49,55 @@ class TaskTest extends PHPUnit_Framework_TestCase
         $task->run(null, null);
     }
 
+    public function test_it_emits_event_when_email_already_sent() {
+        $emitter = Mockery::mock(\League\Event\Emitter::class);
+        $printer = Mockery::mock(\Tpavlek\PrintJobs\Printer::class);
+        $job = new \Tpavlek\PrintJobs\Job(1, "mock_name", "mock_owner", "mock_status", "mock_type", 1);
+
+        $printer->shouldReceive('getFirstRemoteJob')->once()->andReturn($job);
+
+        $printer
+            ->shouldReceive('loadLastJob')
+            ->once()
+            ->andReturn(new \Tpavlek\PrintJobs\JobData([
+                'hash' => $job->hash(),
+                'email_sent' => true,
+                'date' => (string)\Carbon\Carbon::now()
+            ]));
+        // We expect to emit a NoJobsEvent while passing along the printer
+        $emitter
+            ->shouldReceive('emit')
+            ->withArgs([
+                \Mockery::type(\Tpavlek\PrintJobs\IO\Events\StillStuckEvent::class),
+                \Mockery::type(\Tpavlek\PrintJobs\IO\PrinterJob::class)
+            ])
+            ->once();
+
+        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $this->mock_io, $emitter);
+        $task->run(null, null);
+    }
+
+    public function test_it_saves_current_job_to_disk_if_job_is_new() {
+        $printer = Mockery::mock(\Tpavlek\PrintJobs\Printer::class);
+        $job = new \Tpavlek\PrintJobs\Job(1, "mock_name", "mock_owner", "mock_status", "mock_type", 1);
+
+        $printer->shouldReceive('getFirstRemoteJob')->once()->andReturn($job);
+
+        $printer->shouldReceive('loadLastJob')
+            ->once()
+            ->andReturn(new \Tpavlek\PrintJobs\JobData([
+                'hash' => 'different_hash',
+                'email_sent' => false,
+                'date' => (string)\Carbon\Carbon::now()
+            ]));
+
+        $printer->shouldReceive('saveCurrentJob')
+            ->once()
+            ->withArgs([ $job, false ]);
+
+        $task = new \Tpavlek\PrintJobs\TaskRunner\Task($printer, $this->mock_io, new \League\Event\Emitter());
+        $task->run(null, null);
+    }
+
 
 }

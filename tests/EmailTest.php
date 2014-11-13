@@ -22,27 +22,25 @@ class EmailTest extends PHPUnit_Framework_TestCase {
         Mockery::close();
     }
 
-    public function testConstructor()
+    public function test_it_sets_class_variables()
     {
-        $email = new \Tpavlek\PrintJobs\Email(
-            $this->job,
-            $this->printer,
+        $email = new \Tpavlek\PrintJobs\IO\Email(
             $this->mock_transport,
-            $this->mock_message
+            $this->mock_message,
+            [ "mock_email" ]
         );
 
         $this->assertAttributeEquals($this->mock_transport, "mailer", $email);
         $this->assertAttributeEquals($this->mock_message, "message", $email);
-        $this->assertAttributeEquals($this->job, "job", $email);
-        $this->assertAttributeEquals($this->printer, "printer", $email);
+        $this->assertAttributeEquals([ "mock_email"], "send_to", $email);
     }
 
+
     public function testSendEmail() {
-        $email = new \Tpavlek\PrintJobs\Email(
-            $this->job,
-            $this->printer,
+        $email = new \Tpavlek\PrintJobs\IO\Email(
             $this->mock_transport,
-            $this->mock_message
+            $this->mock_message,
+            [ "mock_email@ualberta.ca" ]
         );
 
         $this->mock_message->shouldReceive(
@@ -54,7 +52,7 @@ class EmailTest extends PHPUnit_Framework_TestCase {
             ->andReturnSelf();
         $this->mock_transport->shouldReceive('send');
 
-        $email->send([ "mock_email@ualberta.ca "]);
+        $email->send(new \Tpavlek\PrintJobs\IO\PrinterJob($this->printer, $this->job));
     }
 
 }

@@ -33,13 +33,13 @@ class Runner
         $this->emitter = $emitter;
     }
 
-    public function run($printjobs_config, $container)
+    public function run($printjobs_config)
     {
         foreach ($this->printers as $printer_data) {
             $printer = $this->printerFactory->make($printer_data);
 
             try {
-                $this->taskFactory->make($printer)->run($printjobs_config, $container);
+                $this->taskFactory->make($printer)->run($printjobs_config);
             } catch (\GuzzleHttp\Exception\AdapterException $exception) {
                 $this->emitter->emit(new TimedOutEvent(), $printer);
             } catch (\Exception $exception) {

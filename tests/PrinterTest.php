@@ -56,6 +56,16 @@ class PrinterTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(17, $name);
     }
 
+    public function test_it_gets_management_url() {
+        $url = "http://google.com/test/query?string=test";
+        $printer = new \Tpavlek\PrintJobs\Printer($url, "Test Name", $this->mock_goutte);
+
+        $result = $printer->getManagementUrl();
+        $expected = "http://google.com/properties/authentication/login.php?redir=/support/remoteUI/RUIViewer.php?login=true";
+
+        $this->assertEquals($expected, $result);
+    }
+
 
 
 

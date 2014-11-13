@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a388f7cd86dc64cf0845dff42643522d",
+    "hash": "06d1f3d4baa9222ee8339b878fa9037f",
     "packages": [
         {
             "name": "fabpot/goutte",
@@ -217,6 +217,59 @@
                 "listener"
             ],
             "time": "2014-10-11 16:18:15"
+        },
+        {
+            "name": "league/url",
+            "version": "3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/url.git",
+                "reference": "aea2094e1b6598617bd80b87166a2818314cf1dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/url/zipball/aea2094e1b6598617bd80b87166a2818314cf1dc",
+                "reference": "aea2094e1b6598617bd80b87166a2818314cf1dc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.0",
+                "true/punycode": "~1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Url\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ignace Nyamagana Butera",
+                    "email": "nyamsprod@gmail.com",
+                    "homepage": "https://github.com/nyamsprod/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "League/url is a lightweight PHP Url manipulating library",
+            "keywords": [
+                "parse_url",
+                "php",
+                "url"
+            ],
+            "time": "2014-11-12 20:19:18"
         },
         {
             "name": "monolog/monolog",
@@ -691,6 +744,53 @@
             "description": "Symfony DomCrawler Component",
             "homepage": "http://symfony.com",
             "time": "2014-10-01 05:50:18"
+        },
+        {
+            "name": "true/punycode",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/true/php-punycode.git",
+                "reference": "59dca474914324763397be2ea3d6ad3bc48f4688"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/true/php-punycode/zipball/59dca474914324763397be2ea3d6ad3bc48f4688",
+                "reference": "59dca474914324763397be2ea3d6ad3bc48f4688",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.x",
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "2.0.x-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "True\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Renan Gonçalves",
+                    "email": "renan.saddam@gmail.com"
+                }
+            ],
+            "description": "A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)",
+            "homepage": "https://github.com/true/php-punycode",
+            "keywords": [
+                "idna",
+                "punycode"
+            ],
+            "time": "2014-08-26 14:21:01"
         }
     ],
     "packages-dev": [

@@ -4,11 +4,10 @@ namespace Tpavlek\PrintJobs\IO\Events;
 
 use Tpavlek\PrintJobs\IO\PrinterJob;
 
-class SendEmailEvent extends JobEvent {
-
+class StillRunningEvent extends JobEvent {
 
     public function getMessage(PrinterJob $job)
     {
-        // TODO: Implement getMessage() method.
+        return "Job {$job->job->id} is running on printer {$job->printer->name}";
     }
 }

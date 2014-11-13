@@ -1,4 +1,5 @@
 <?php
+use Tpavlek\PrintJobs\IO\Email;
 use Tpavlek\PrintJobs\PrinterFactory;
 
 require 'vendor/autoload.php';
@@ -12,7 +13,12 @@ $container->add('mailer', '\Nette\Mail\SmtpMailer')
         'username' => 'glados@ualberta.ca'
     ]);
 
-$container->add('message', '\Nette\Mail\Message');
+$container->add('message', \Nette\Mail\Message::class);
+
+$container->add('email', Email::class)
+    ->withArgument('mailer')
+    ->withArgument('message')
+    ->withArgument($printjobs_config['send_to']);
 
 $container->add('client', function() {
     $client = new \Goutte\Client();

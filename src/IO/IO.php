@@ -5,8 +5,10 @@ namespace Tpavlek\PrintJobs\IO;
 use League\Event\AbstractEvent;
 use League\Event\AbstractListener;
 use Monolog\Logger;
+use Tpavlek\PrintJobs\IO\Events\JobEvent;
 use Tpavlek\Printjobs\IO\Events\NoJobsEvent;
 use Tpavlek\PrintJobs\IO\Events\PrinterEvent;
+use Tpavlek\PrintJobs\IO\Events\StillRunningEvent;
 use Tpavlek\PrintJobs\IO\Events\UnknownErrorEvent;
 use Tpavlek\PrintJobs\Printer;
 
@@ -18,6 +20,8 @@ use Tpavlek\PrintJobs\Printer;
  */
 class IO extends AbstractListener
 {
+
+    use ListenerTrait;
 
     /**
      * A Monolog instance to handle outputing IO to logs.
@@ -81,10 +85,26 @@ class IO extends AbstractListener
 
         // This must come after NoJobsEvent, as NoJobsEvent inherits from printer event
         // NoJobsEvent should simply log information, where all other PrinterEvents should be considered errors.
+        // Expected events are:
+        // - TimedOutEvent
         if ($event instanceof PrinterEvent) {
             $this->checkParam($param, $event, Printer::class);
             $this->error($event->getMessage($param));
             return;
+        }
+
+        // Inherits from JobEvent
+        if ($event instanceof StillRunningEvent) {
+            $this->checkParam($param, $event, PrinterJob::class);
+            $this->message($event->getMessage($param));
+        }
+
+        // All other JobEvents should be considered errors
+        // Expected events are:
+        // - StillStuckEvent
+        if ($event instanceof JobEvent) {
+            $this->checkParam($param, $event, PrinterJob::class);
+            $this->error($event->getMessage($param));
         }
 
         if ($event instanceof UnknownErrorEvent) {
@@ -93,22 +113,5 @@ class IO extends AbstractListener
             return;
         }
 
-    }
-
-    /**
-     * Checks the parameter passed to the handle function to ensure correctness
-     *
-     * A correct parameter is an instance of a printer
-     *
-     * @param $param
-     * @param AbstractEvent $event
-     * @param string $expected The class name we expect the parameter to be
-     * @throws \Exception
-     */
-    private function checkParam($param, AbstractEvent $event, $expected) {
-        if ($param === null) {
-            $name = $event->getName();
-            throw new \Exception("Expected a {$expected} but parameter is null on event: {$name}");
-        }
     }
 }

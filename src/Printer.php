@@ -3,6 +3,7 @@
 namespace Tpavlek\PrintJobs;
 
 use Carbon\Carbon;
+use League\Url\Url;
 
 class Printer {
 
@@ -38,6 +39,19 @@ class Printer {
     }
 
     /**
+     * Loads the last job off disk.
+     *
+     * @return JobData
+     */
+    public function loadLastJob() {
+        return $this->getFilesystem()->load();
+    }
+
+    public function saveCurrentJob(Job $job, $email_sent = false) {
+        $this->getFilesystem()->save($job, $email_sent);
+    }
+
+    /**
      * Get the filesystem representation of the printer.
      *
      * Printers last job are stored in JSON files on the filesystem.
@@ -45,6 +59,16 @@ class Printer {
      */
     public function getFilesystem() {
         return new PrinterFile($this->name);
+    }
+
+    /**
+     * Get the link to the management URL for this printer.
+     *
+     * @return string
+     */
+    public function getManagementUrl() {
+        $url = Url::createFromUrl($this->url);
+        return $url->getBaseUrl() . "/properties/authentication/login.php?redir=/support/remoteUI/RUIViewer.php?login=true";
     }
 
     /**
